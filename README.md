@@ -26,6 +26,7 @@ Naive implementations of some ANNS (Approximate Nearest Neighbor Search) algorit
 - [PQ](https://github.com/matsui528/nanopq/blob/main/nanopq/pq.py)
   - Paper: [Product Quantization for Nearest Neighbor Search](https://hal.inria.fr/inria-00514462v2/document)
   - Survey: [A Survey of Product Quantization](https://www.jstage.jst.go.jp/article/mta/6/1/6_2/_pdf)
+  - Blog: [Accelerating Similarity Search on Really Big Data with Vector Indexing](https://zilliz.com/blog/Accelerating-Similarity-Search-on-Really-Big-Data-with-Vector-Indexing)
 
 ## Datasets
 

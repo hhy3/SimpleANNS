@@ -28,10 +28,10 @@ class FlatIndex : public OnlineIndex {
    *
    */
   bool build(const std::vector<P>& point) override {
-    assert(point.size() > 0);
-    n_ = point.size();
-    for (size_t i = 0; i < n_; ++i) {
-      assert(point[i].size() == dim_);
+    assert((int)point.size() > 0);
+    n_ = (int)point.size();
+    for (int i = 0; i < n_; ++i) {
+      assert((int)point[i].size() == dim_);
     }
     points_ = point;
     return true;
@@ -43,17 +43,17 @@ class FlatIndex : public OnlineIndex {
    *
    */
   std::vector<int> search(const P& point, int K) override {
-    assert(point.size() == dim_ && K <= points_.size());
+    assert((int)point.size() == dim_ && K <= (int)points_.size());
     std::vector<std::pair<float, int>> dist;
     dist.reserve(n_);
-    for (size_t i = 0; i < points_.size(); ++i) {
+    for (int i = 0; i < (int)points_.size(); ++i) {
       F d = distFunc_(points_[i], point);
       dist.emplace_back(d, i);
     }
     std::nth_element(dist.begin(), dist.begin() + K - 1, dist.end());
     std::sort(dist.begin(), dist.begin() + K);
     std::vector<int> ret(K);
-    for (size_t i = 0; i < K; ++i) {
+    for (int i = 0; i < K; ++i) {
       ret[i] = dist[i].second;
     }
     return ret;
@@ -65,7 +65,7 @@ class FlatIndex : public OnlineIndex {
    * 
    */
   bool insert(const P& point) {
-    assert(point.size() == dim_);
+    assert((int)point.size() == dim_);
     n_++;
     points_.push_back(point);
     return true;
