@@ -2,19 +2,26 @@
 
 #include <array>
 #include <queue>
+#include <string_view>
 #include <vector>
 
-#include "Dist.hpp"
-#include "Index.hpp"
+#include "OnlineIndex.hpp"
+#include "Space.hpp"
 #include "defs.hpp"
 
 /**
  * @brief Brute force implementation.
  *
  */
-class FlatIndex : public Index {
+class FlatIndex : public OnlineIndex {
  public:
-  FlatIndex(DistFunc dist) : dist_(dist) {}
+  FlatIndex(std::string_view space_name, int dim) : dim_(dim) {
+    if (space_name == "l2") {
+      dist_ = L2Space::getDistFunc();
+    } else if (space_name == "ip") {
+      dist_ = InnerProductSpace::getDistFunc();
+    }
+  }
 
   /**
    * @brief Just load vector points.
@@ -23,8 +30,7 @@ class FlatIndex : public Index {
   bool build(const std::vector<P>& point) override {
     assert(point.size() > 0);
     n_ = point.size();
-    dim_ = point[0].size();
-    for (size_t i = 1; i < n_; ++i) {
+    for (size_t i = 0; i < n_; ++i) {
       assert(point[i].size() == dim_);
     }
     points_ = point;
@@ -36,7 +42,7 @@ class FlatIndex : public Index {
    *        Time Complexity: O(ND + Nlog(K))
    *
    */
-  std::vector<P> query(const P& point, int K) override {
+  std::vector<P> search(const P& point, int K) override {
     assert(point.size() == dim_ && K <= points_.size());
     std::priority_queue<std::pair<F, int>> pq;
     DistFunc dist;
@@ -57,6 +63,28 @@ class FlatIndex : public Index {
     }
     std::reverse(ret.begin(), ret.end());
     return ret;
+  }
+
+  /**
+   * @brief Add new vector.
+   *        Time Complexity: O(D)
+   * 
+   */
+  bool insert(const P& point) {
+    assert(point.size() == dim_);
+    n_++;
+    points_.push_back(point);
+    return true;
+  }
+
+  bool erase(const P& point) {
+    auto it = std::find(points_.begin(), points_.end(), point); 
+    if (it == points_.end()) {
+      return false;
+    } else {
+      points_.erase(it);
+      return true;
+    }
   }
 
  private:

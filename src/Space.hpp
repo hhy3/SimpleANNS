@@ -5,12 +5,12 @@
 #include "defs.hpp"
 
 /**
- * @brief L2 norm between two vectors.
+ * @brief L2 space
  *
  */
-class L2Dist {
+class L2Space {
  public:
-  static DistFunc get() {
+  static DistFunc getDistFunc() {
     return DistFunc([](const P& x, const P& y) -> F {
       assert(x.size() == y.size());
       F d = 0.0;
@@ -23,13 +23,13 @@ class L2Dist {
 };
 
 /**
- * @brief Inner product between two vectors.
+ * @brief Inner product space
  *        Need to normalize vectors before calculation.
  *
  */
-class InnerProductDist {
+class InnerProductSpace {
  public:
-  static DistFunc get() {
+  static DistFunc getDistFunc() {
     return DistFunc([](const auto& x, const auto& y) {
       assert(x.size() > 0 && x.size() == y.size());
       F d = 0.0;
