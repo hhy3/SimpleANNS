@@ -14,10 +14,10 @@ Naive implementations of some ANNS (Approximate Nearest Neighbor Search) algorit
   - Paper: [Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs](https://arxiv.org/ftp/arxiv/papers/1603/1603.09320.pdf)
 
 - [IVF-HNSW](https://github.com/dbaranchuk/ivf-hnsw)
-  - Paper: []Revisiting the Inverted Indices for Billion-Scale Approximate Nearest Neighbors (https://openaccess.thecvf.com/content_ECCV_2018/papers/Dmitry_Baranchuk_Revisiting_the_Inverted_ECCV_2018_paper.pdf)
+  - Paper: [Revisiting the Inverted Indices for Billion-Scale Approximate Nearest Neighbors](https://openaccess.thecvf.com/content_ECCV_2018/papers/Dmitry_Baranchuk_Revisiting_the_Inverted_ECCV_2018_paper.pdf)
 
 - [NSG](https://github.com/ZJULearning/nsg)
-  -Paper: [Fast Approximate Nearest Neighbor Search With The Navigating Spreading-out Graph](https://arxiv.org/pdf/1707.00143.pdf)
+  - Paper: [Fast Approximate Nearest Neighbor Search With The Navigating Spreading-out Graph](https://arxiv.org/pdf/1707.00143.pdf)
 
 - [Vamana (DiskANN)](https://github.com/microsoft/DiskANN)
   - Paper: [DiskANN: Fast Accurate Billion-point Nearest Neighbor Search on a Single Node](https://suhasjs.github.io/files/diskann_neurips19.pdf)
