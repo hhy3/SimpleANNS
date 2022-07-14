@@ -2,6 +2,10 @@
 
 #include <cassert>
 
+/**
+ * @brief L2 norm between two vectors.
+ * 
+ */
 class L2Dist {
  public:
   auto operator()(const auto& x, const auto& y) {
@@ -14,6 +18,11 @@ class L2Dist {
   }
 };
 
+/**
+ * @brief Inner product between two vectors.
+ *        Need to normalize vectors before calculation.
+ * 
+ */
 class InnerProductDist {
  public:
   auto operator()(const auto& x, const auto& y) {

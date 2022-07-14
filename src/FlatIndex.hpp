@@ -8,18 +8,32 @@
 #include "Index.hpp"
 #include "defs.hpp"
 
+/**
+ * @brief Brute force implementation.
+ *
+ */
 template <typename F, int NDIM, typename DistFunc>
 class FlatIndex : public Index<F, NDIM, DistFunc> {
  public:
   using P = Point<F, NDIM>;
+
+  /**
+   * @brief Just load vector points.
+   *
+   */
   bool build(const std::vector<P>& point) override {
     points_ = point;
     return true;
   }
 
+  /**
+   * @brief Brute force KNN search.
+   *        Time Complexity: O(ND + Nlog(K))
+   *
+   */
   std::vector<P> query(const P& point, int K) override {
     assert(point.size() == NDIM && K <= points_.size());
-    std::priority_queue<std::pair<float, int>> pq;
+    std::priority_queue<std::pair<flot, int>> pq;
     DistFunc dist;
     for (size_t i = 0; i < points_.size(); ++i) {
       F d = dist(points_[i], point);

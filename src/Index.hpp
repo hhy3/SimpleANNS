@@ -4,6 +4,10 @@
 
 #include "defs.hpp"
 
+/**
+ * @brief Base class for any index algorithms.
+ * 
+ */
 template <typename F, int NDIM, typename DistFunc>
 class Index {
  public:
