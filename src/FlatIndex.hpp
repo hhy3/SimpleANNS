@@ -17,9 +17,9 @@ class FlatIndex : public OnlineIndex {
  public:
   FlatIndex(std::string_view space_name, int dim) : dim_(dim) {
     if (space_name == "l2") {
-      dist_ = L2Space::getDistFunc();
+      distFunc_ = L2Space::getDistFunc();
     } else if (space_name == "ip") {
-      dist_ = InnerProductSpace::getDistFunc();
+      distFunc_ = InnerProductSpace::getDistFunc();
     }
   }
 
@@ -42,26 +42,20 @@ class FlatIndex : public OnlineIndex {
    *        Time Complexity: O(ND + Nlog(K))
    *
    */
-  std::vector<P> search(const P& point, int K) override {
+  std::vector<int> search(const P& point, int K) override {
     assert(point.size() == dim_ && K <= points_.size());
-    std::priority_queue<std::pair<F, int>> pq;
-    DistFunc dist;
+    std::vector<std::pair<float, int>> dist;
+    dist.reserve(n_);
     for (size_t i = 0; i < points_.size(); ++i) {
-      F d = dist_(points_[i], point);
-      if (pq.size() < K) {
-        pq.push({d, i});
-      } else if (d < pq.top().first) {
-        pq.pop();
-        pq.push({d, i});
-      }
+      F d = distFunc_(points_[i], point);
+      dist.emplace_back(d, i);
     }
-    std::vector<P> ret;
-    while (pq.size()) {
-      auto [_, i] = pq.top();
-      pq.pop();
-      ret.push_back(points_[i]);
+    std::nth_element(dist.begin(), dist.begin() + K - 1, dist.end());
+    std::sort(dist.begin(), dist.begin() + K);
+    std::vector<int> ret(K);
+    for (size_t i = 0; i < K; ++i) {
+      ret[i] = dist[i].second;
     }
-    std::reverse(ret.begin(), ret.end());
     return ret;
   }
 
@@ -77,6 +71,11 @@ class FlatIndex : public OnlineIndex {
     return true;
   }
 
+  /**
+   * @brief Remove vector.
+   *        Time Complexity: O(ND)
+   * 
+   */
   bool erase(const P& point) {
     auto it = std::find(points_.begin(), points_.end(), point); 
     if (it == points_.end()) {
@@ -88,7 +87,7 @@ class FlatIndex : public OnlineIndex {
   }
 
  private:
-  DistFunc dist_;
+  DistFunc distFunc_;
   int n_, dim_;
   std::vector<P> points_;
 };
