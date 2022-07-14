@@ -1,3 +1,4 @@
+#include <iomanip>
 #include <iostream>
 #include <unordered_set>
 
@@ -13,7 +14,10 @@ int main() {
       SIFTReader::readi("../data/siftsmall/siftsmall_groundtruth.ivecs");
   constexpr int K = 100, dim = 128;
   FlatIndex index("l2", dim);
+  auto start = clock();
   index.build(base);
+  auto buildTime = clock() - start;
+  start = clock();
   int64_t cnt = 0;
   for (int i = 0; i < (int)query.size(); ++i) {
     auto ret = index.search(query[i], K);
@@ -24,5 +28,12 @@ int main() {
       }
     }
   }
-  cout << "FlatIndex recall: " << cnt * 100.0 / query.size() / K << "%\n";
+  auto searchTime = clock() - start;
+  cout << fixed << setprecision(3);
+  cout << "FlatIndex:\n";
+  cout << "    recall: " << cnt * 100.0 / query.size() / K << "%\n";
+  cout << "    build time: " << 1000.0 * double(buildTime) / CLOCKS_PER_SEC
+       << "ms\n";
+  cout << "    search time: "
+       << 1000.0 * double(searchTime) / CLOCKS_PER_SEC / query.size() << "ms\n";
 }

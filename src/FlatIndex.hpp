@@ -39,7 +39,7 @@ class FlatIndex : public OnlineIndex {
 
   /**
    * @brief Brute force KNN search.
-   *        Time Complexity: O(ND + Nlog(K))
+   *        Time Complexity: O(ND + Klog(K))
    *
    */
   std::vector<int> search(const P& point, int K) override {
