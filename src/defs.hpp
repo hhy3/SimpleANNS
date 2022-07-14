@@ -1,6 +1,8 @@
 #pragma once
 
-#include <array>
+#include <functional>
+#include <vector>
 
-template <typename F, int NDIM>
-using Point = std::array<F, NDIM>;
+using F = float;
+using P = std::vector<F>;
+using DistFunc = std::function<F(P, P)>;

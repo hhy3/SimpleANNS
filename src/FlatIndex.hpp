@@ -12,16 +12,21 @@
  * @brief Brute force implementation.
  *
  */
-template <typename F, int NDIM, typename DistFunc>
-class FlatIndex : public Index<F, NDIM, DistFunc> {
+class FlatIndex : public Index {
  public:
-  using P = Point<F, NDIM>;
+  FlatIndex(DistFunc dist) : dist_(dist) {}
 
   /**
    * @brief Just load vector points.
    *
    */
   bool build(const std::vector<P>& point) override {
+    assert(point.size() > 0);
+    n_ = point.size();
+    dim_ = point[0].size();
+    for (size_t i = 1; i < n_; ++i) {
+      assert(point[i].size() == dim_);
+    }
     points_ = point;
     return true;
   }
@@ -32,11 +37,11 @@ class FlatIndex : public Index<F, NDIM, DistFunc> {
    *
    */
   std::vector<P> query(const P& point, int K) override {
-    assert(point.size() == NDIM && K <= points_.size());
-    std::priority_queue<std::pair<flot, int>> pq;
+    assert(point.size() == dim_ && K <= points_.size());
+    std::priority_queue<std::pair<F, int>> pq;
     DistFunc dist;
     for (size_t i = 0; i < points_.size(); ++i) {
-      F d = dist(points_[i], point);
+      F d = dist_(points_[i], point);
       if (pq.size() < K) {
         pq.push({d, i});
       } else if (d < pq.top().first) {
@@ -55,5 +60,7 @@ class FlatIndex : public Index<F, NDIM, DistFunc> {
   }
 
  private:
+  DistFunc dist_;
+  int n_, dim_;
   std::vector<P> points_;
 };
