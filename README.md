@@ -3,8 +3,8 @@
 Naive implementations of some ANNS (Approximate Nearest Neighbor Search) algorithms without any optimization and generalization.
 
 ## Progess 
-- [x] FLAT
-- [ ] IVF_FLAT
+- [x] [FLAT](https://github.com/hhy3/SimpleANNS/blob/master/src/FlatIndex.hpp)
+- [x] [IVF_FLAT](https://github.com/hhy3/SimpleANNS/blob/master/src/IVFFlatIndex.hpp)
 - [ ] IVF_SQ8
 - [ ] IVF_PQ
 - [ ] HNSW
