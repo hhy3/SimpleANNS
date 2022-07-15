@@ -4,25 +4,20 @@
 #include <cassert>
 #include <numeric>
 #include <random>
+#include <iostream>
 
-#include "Space.hpp"
+#include "defs.hpp"
 
 namespace sanns {
 
 class KMeans {
  public:
-  KMeans(std::string_view space_name) {
-    if (space_name == "l2") {
-      dist_func_ = L2Space::getDistFunc();
-    } else if (space_name == "ip") {
-      dist_func_ = InnerProductSpace::getDistFunc();
-    }
-  }
+  KMeans(DistFunc dist_func) : dist_func_(dist_func) {}
 
   void fit(const std::vector<P>& points, int n_clusters, int max_iter = 300) {
     n_clusters_ = n_clusters;
     n_points_ = points.size();
-    ndim_ = points[0].size();
+    dim_ = points[0].size();
     points_ = points;
     initCentroids(n_clusters);
     for (int i = 0; i < max_iter; ++i) {
@@ -37,7 +32,7 @@ class KMeans {
   std::vector<P> centroids() { return centroids_; }
   P centroid(int idx) { return centroids_[idx]; }
 
-  std::vector<std::vector<int>> findLabelsOfEachClusters() {
+  std::vector<std::vector<int>> findComponents() {
     std::vector<std::vector<int>> ret(n_clusters_);
     for (int i = 0; i < n_points_; ++i) {
       ret[labels_[i]].push_back(i);
@@ -47,7 +42,7 @@ class KMeans {
 
  private:
   DistFunc dist_func_;
-  int n_clusters_, n_points_, ndim_;
+  int n_clusters_, n_points_, dim_;
   std::vector<P> centroids_;
   std::vector<int> labels_;
   std::vector<P> points_;
@@ -85,12 +80,12 @@ class KMeans {
   }
 
   std::vector<P> findCentroidsFromLabels(const std::vector<int> labels) {
-    std::vector<P> new_centroids(n_clusters_, P(ndim_));
+    std::vector<P> new_centroids(n_clusters_, P(dim_));
     std::vector<int> cnt(n_clusters_);
     for (int i = 0; i < n_points_; ++i) {
       int label = labels_[i];
       cnt[label]++;
-      for (int j = 0; j < ndim_; ++j) {
+      for (int j = 0; j < dim_; ++j) {
         new_centroids[label][j] += points_[i][j];
       }
     }
@@ -98,7 +93,7 @@ class KMeans {
       if (!cnt[i]) {
         continue;
       }
-      for (int j = 0; j < ndim_; ++j) {
+      for (int j = 0; j < dim_; ++j) {
         new_centroids[i][j] /= cnt[i];
       }
     }

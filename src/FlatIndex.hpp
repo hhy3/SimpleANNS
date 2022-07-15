@@ -32,8 +32,8 @@ class FlatIndex : public OnlineIndex {
    */
   bool build(const std::vector<P>& point, const Config& config = {}) override {
     assert((int)point.size() > 0);
-    n_ = (int)point.size();
-    for (int i = 0; i < n_; ++i) {
+    n_points_ = (int)point.size();
+    for (int i = 0; i < n_points_; ++i) {
       assert((int)point[i].size() == dim_);
     }
     points_ = point;
@@ -49,8 +49,8 @@ class FlatIndex : public OnlineIndex {
                           const Config& config = {}) override {
     assert((int)point.size() == dim_ && K <= (int)points_.size());
     std::vector<std::pair<float, int>> dist;
-    dist.reserve(n_);
-    for (int i = 0; i < (int)points_.size(); ++i) {
+    dist.reserve(n_points_);
+    for (int i = 0; i < n_points_; ++i) {
       F d = dist_func_(points_[i], point);
       dist.emplace_back(d, i);
     }
@@ -70,7 +70,7 @@ class FlatIndex : public OnlineIndex {
    */
   bool insert(const P& point, const Config& config = {}) {
     assert((int)point.size() == dim_);
-    n_++;
+    n_points_++;
     points_.push_back(point);
     return true;
   }
@@ -92,7 +92,7 @@ class FlatIndex : public OnlineIndex {
 
  private:
   DistFunc dist_func_;
-  int n_, dim_;
+  int n_points_, dim_;
   std::vector<P> points_;
 };
 
