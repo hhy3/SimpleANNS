@@ -18,6 +18,12 @@ namespace sanns {
  */
 class FlatIndex : public OnlineIndex {
  public:
+  /**
+   * @brief Construct a new Flat Index object
+   *
+   * @param space_name: Only l2 and ip are supported.
+   * @param dim: Vector space dimensionality.
+   */
   FlatIndex(std::string_view space_name, int dim) : dim_(dim) {
     if (space_name == "l2") {
       dist_func_ = L2Space::getDistFunc();
@@ -28,30 +34,31 @@ class FlatIndex : public OnlineIndex {
 
   /**
    * @brief Just load vector points.
+   *        Time Complexity: O(1)
    *
    */
-  bool build(const std::vector<P>& point, const Config& config = {}) override {
-    assert((int)point.size() > 0);
-    n_points_ = (int)point.size();
+  bool build(std::vector<P>* points, const Config& config = {}) override {
+    assert((int)points->size() > 0);
+    n_points_ = (int)points->size();
     for (int i = 0; i < n_points_; ++i) {
-      assert((int)point[i].size() == dim_);
+      assert((int)points->at(i).size() == dim_);
     }
-    points_ = point;
+    points_ = points;
     return true;
   }
 
   /**
    * @brief Brute force KNN search.
-   *        Time Complexity: O(ND + Klog(K))
+   *        Time Complexity: O(N * D + K * log(K))
    *
    */
   std::vector<int> search(const P& point, int K,
                           const Config& config = {}) override {
-    assert((int)point.size() == dim_ && K <= (int)points_.size());
+    assert((int)point.size() == dim_ && K <= (int)points_->size());
     std::vector<std::pair<float, int>> dist;
     dist.reserve(n_points_);
     for (int i = 0; i < n_points_; ++i) {
-      F d = dist_func_(points_[i], point);
+      F d = dist_func_(points_->at(i), point);
       dist.emplace_back(d, i);
     }
     std::nth_element(dist.begin(), dist.begin() + K - 1, dist.end());
@@ -71,21 +78,21 @@ class FlatIndex : public OnlineIndex {
   bool insert(const P& point, const Config& config = {}) {
     assert((int)point.size() == dim_);
     n_points_++;
-    points_.push_back(point);
+    points_->push_back(point);
     return true;
   }
 
   /**
    * @brief Remove vector.
-   *        Time Complexity: O(ND)
+   *        Time Complexity: O(N * D)
    *
    */
   bool erase(const P& point, const Config& config = {}) {
-    auto it = std::find(points_.begin(), points_.end(), point);
-    if (it == points_.end()) {
+    auto it = std::find(points_->begin(), points_->end(), point);
+    if (it == points_->end()) {
       return false;
     } else {
-      points_.erase(it);
+      points_->erase(it);
       return true;
     }
   }
@@ -93,7 +100,7 @@ class FlatIndex : public OnlineIndex {
  private:
   DistFunc dist_func_;
   int n_points_, dim_;
-  std::vector<P> points_;
+  std::vector<P>* points_;
 };
 
 }  // namespace sanns

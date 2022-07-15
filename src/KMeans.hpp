@@ -4,7 +4,6 @@
 #include <cassert>
 #include <numeric>
 #include <random>
-#include <iostream>
 
 #include "defs.hpp"
 
@@ -14,10 +13,10 @@ class KMeans {
  public:
   KMeans(DistFunc dist_func) : dist_func_(dist_func) {}
 
-  void fit(const std::vector<P>& points, int n_clusters, int max_iter = 300) {
+  void fit(std::vector<P>* points, int n_clusters, int max_iter = 300) {
     n_clusters_ = n_clusters;
-    n_points_ = points.size();
-    dim_ = points[0].size();
+    n_points_ = points->size();
+    dim_ = points->at(0).size();
     points_ = points;
     initCentroids(n_clusters);
     for (int i = 0; i < max_iter; ++i) {
@@ -28,8 +27,11 @@ class KMeans {
   }
 
   int nCluster() { return n_clusters_; }
+
   int findCluster(int idx) { return labels_[idx]; }
+
   std::vector<P> centroids() { return centroids_; }
+
   P centroid(int idx) { return centroids_[idx]; }
 
   std::vector<std::vector<int>> findComponents() {
@@ -45,12 +47,12 @@ class KMeans {
   int n_clusters_, n_points_, dim_;
   std::vector<P> centroids_;
   std::vector<int> labels_;
-  std::vector<P> points_;
+  std::vector<P>* points_;
 
   void initCentroids(int n_clusters) {
     centroids_.resize(n_clusters);
     for (size_t i = 0; i < n_clusters; ++i) {
-      centroids_[i] = points_[i];
+      centroids_[i] = points_->at(i);
     }
   }
 
@@ -59,7 +61,7 @@ class KMeans {
                                          std::vector<float>(n_clusters_));
     for (int i = 0; i < n_points_; ++i) {
       for (int j = 0; j < n_clusters_; ++j) {
-        dist[i][j] = dist_func_(points_[i], centroids_[j]);
+        dist[i][j] = dist_func_(points_->at(i), centroids_[j]);
       }
     }
     return dist;
@@ -86,7 +88,7 @@ class KMeans {
       int label = labels_[i];
       cnt[label]++;
       for (int j = 0; j < dim_; ++j) {
-        new_centroids[label][j] += points_[i][j];
+        new_centroids[label][j] += points_->at(i)[j];
       }
     }
     for (int i = 0; i < n_clusters_; ++i) {

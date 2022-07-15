@@ -2,25 +2,40 @@
 
 #include <string_view>
 
+#include "Config.hpp"
 #include "Index.hpp"
+#include "KMeans.hpp"
 #include "Space.hpp"
 #include "defs.hpp"
-#include "KMeans.hpp"
-#include "Config.hpp"
 
 namespace sanns {
 
+/**
+ * @brief IVF_FLAT index implementation.
+ *
+ */
 class IVFFlatIndex : public Index {
  public:
-  IVFFlatIndex(std::string_view space_name, int dim)
-      : dim_(dim) {
+  /**
+   * @brief Construct a new IVFFlatIndex object
+   *
+   * @param space_name: Only l2 and ip are supported.
+   * @param dim: Vector space dimensionality.
+   */
+  IVFFlatIndex(std::string_view space_name, int dim) : dim_(dim) {
     if (space_name == "l2") {
       dist_func_ = L2Space::getDistFunc();
     } else if (space_name == "ip") {
       dist_func_ = InnerProductSpace::getDistFunc();
     }
   }
-  bool build(const std::vector<P>& points, const Config& config) override {
+
+  /**
+   * @brief Clustering vectors into nlist clusters using k-menas algorithm.
+   *        Time Complexity: O(N * nlist * D * max_iter)
+   *
+   */
+  bool build(std::vector<P>* points, const Config& config) override {
     assert(config.count("nlist"));
     nlist_ = std::stoi(config.at("nlist"));
     int max_iter = 10;
@@ -34,7 +49,15 @@ class IVFFlatIndex : public Index {
     components_ = kmeans.findComponents();
     return true;
   }
-  std::vector<int> search(const P& point, int K, const Config& config) override {
+
+  /**
+   * @brief Search vectors in nprob nearest clusters.
+   *        Time Complexity: Worst case O(N * D + K * log(K))
+   *                         Average case O((nlist + N * nprob / nlist) * D)
+   *
+   */
+  std::vector<int> search(const P& point, int K,
+                          const Config& config) override {
     assert(config.count("nprob"));
     int nprob = std::stoi(config.at("nprob"));
     assert(nprob <= nlist_);
@@ -48,8 +71,8 @@ class IVFFlatIndex : public Index {
     std::nth_element(distc.begin(), distc.begin() + nprob - 1, distc.end());
     std::sort(distc.begin(), distc.begin() + nprob);
     for (int i = 0; i < nprob; ++i) {
-      for (auto &idx : components_[distc[i].second]) {
-        F d = dist_func_(point, points_[idx]);
+      for (auto& idx : components_[distc[i].second]) {
+        F d = dist_func_(point, points_->at(idx));
         distp.emplace_back(d, idx);
       }
     }
@@ -65,7 +88,7 @@ class IVFFlatIndex : public Index {
  private:
   DistFunc dist_func_;
   int n_points_, dim_, nlist_;
-  std::vector<P> points_;
+  std::vector<P>* points_;
   std::vector<P> centroids_;
   std::vector<std::vector<int>> components_;
 };

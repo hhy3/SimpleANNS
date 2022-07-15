@@ -2,12 +2,11 @@
 #include <iostream>
 #include <unordered_set>
 
+#include "Config.hpp"
 #include "IVFFlatIndex.hpp"
 #include "utils.hpp"
-#include "Config.hpp"
 
 using namespace std;
-
 
 int main() {
   cout << fixed << setprecision(3);
@@ -22,7 +21,7 @@ int main() {
   build_config["nlist"] = "128";
   search_config["nprob"] = "20";
   auto start = clock();
-  index.build(base, build_config);
+  index.build(&base, build_config);
   auto buildTime = clock() - start;
   cout << "    build time: " << 1000.0 * double(buildTime) / CLOCKS_PER_SEC
        << "ms\n";
@@ -39,6 +38,7 @@ int main() {
   }
   auto searchTime = clock() - start;
   cout << "    search time: "
-       << 1000.0 * double(searchTime) / CLOCKS_PER_SEC / query.size() << "ms/q\n";
+       << 1000.0 * double(searchTime) / CLOCKS_PER_SEC / query.size()
+       << "ms/q\n";
   cout << "    recall: " << cnt * 100.0 / query.size() / K << "%\n";
 }

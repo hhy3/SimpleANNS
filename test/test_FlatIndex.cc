@@ -17,7 +17,7 @@ int main() {
   constexpr int K = 100, dim = 128;
   sanns::FlatIndex index("l2", dim);
   auto start = clock();
-  index.build(base);
+  index.build(&base);
   auto buildTime = clock() - start;
   cout << "    build time: " << 1000.0 * double(buildTime) / CLOCKS_PER_SEC
        << "ms\n";
