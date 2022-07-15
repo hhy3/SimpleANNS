@@ -13,7 +13,7 @@ int main() {
   auto truth =
       SIFTReader::readi("../data/siftsmall/siftsmall_groundtruth.ivecs");
   constexpr int K = 100, dim = 128;
-  FlatIndex index("l2", dim);
+  sanns::FlatIndex index("l2", dim);
   auto start = clock();
   index.build(base);
   auto buildTime = clock() - start;

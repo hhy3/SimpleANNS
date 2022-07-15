@@ -6,11 +6,11 @@
 
 class SIFTReader {
 public:
-  static std::vector<P> readf(const char* filename) {
-    std::vector<P> points;
+  static std::vector<sanns::P> readf(const char* filename) {
+    std::vector<sanns::P> points;
     std::ifstream fs(filename, std::ios_base::binary);
     for (int dim; fs.read(reinterpret_cast<char*>(&dim), sizeof(dim)); ) {
-      points.push_back(P(dim));
+      points.push_back(sanns::P(dim));
       for (int i = 0; i < dim; ++i) {
         fs.read(reinterpret_cast<char*>(&points.back()[i]), sizeof(float));
       }

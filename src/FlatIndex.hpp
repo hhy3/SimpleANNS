@@ -9,6 +9,8 @@
 #include "Space.hpp"
 #include "defs.hpp"
 
+namespace sanns {
+
 /**
  * @brief Brute force implementation.
  *
@@ -62,7 +64,7 @@ class FlatIndex : public OnlineIndex {
   /**
    * @brief Add new vector.
    *        Time Complexity: O(D)
-   * 
+   *
    */
   bool insert(const P& point) {
     assert((int)point.size() == dim_);
@@ -74,10 +76,10 @@ class FlatIndex : public OnlineIndex {
   /**
    * @brief Remove vector.
    *        Time Complexity: O(ND)
-   * 
+   *
    */
   bool erase(const P& point) {
-    auto it = std::find(points_.begin(), points_.end(), point); 
+    auto it = std::find(points_.begin(), points_.end(), point);
     if (it == points_.end()) {
       return false;
     } else {
@@ -91,3 +93,5 @@ class FlatIndex : public OnlineIndex {
   int n_, dim_;
   std::vector<P> points_;
 };
+
+}  // namespace sanns

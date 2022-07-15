@@ -4,6 +4,8 @@
 
 #include "defs.hpp"
 
+namespace sanns {
+
 /**
  * @brief L2 space
  *
@@ -40,3 +42,5 @@ class InnerProductSpace {
     });
   }
 };
+
+}  // namespace sanns
