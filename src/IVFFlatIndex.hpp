@@ -43,6 +43,7 @@ class IVFFlatIndex : public Index {
       max_iter = stoi(config.at("max_iter"));
     }
     points_ = points;
+    n_points_ = points_->size();
     KMeans kmeans(dist_func_);
     kmeans.fit(points_, nlist_, max_iter);
     centroids_ = kmeans.centroids();
