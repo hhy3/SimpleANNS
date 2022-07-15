@@ -16,6 +16,7 @@ Naive implementations of some ANNS (Approximate Nearest Neighbor Search) algorit
 
 ### Tree Based
 Based on the idea of partitioning vector space, performs poorly due to the curse of dimensionality.
+
 - [Annoy](https://github.com/spotify/annoy)
   - Blog: [Nearest neighbors and vector models – part 2 – algorithms and data structures](https://erikbern.com/2015/10/01/nearest-neighbors-and-vector-models-part-2-how-to-search-in-high-dimensional-spaces.html)
 ### LHS (Locality Sensitive Hashing) Based
@@ -26,7 +27,9 @@ Popular in theory area, but performs poorly in practice with real-world data.
 
 ### Graph Based
 
-Popular in recent years, mostly based on the idea of [Navigable Small World Graph](https://en.wikipedia.org/wiki/Small-world_network). Given a query, start from a source point (randomly chosen or learned), greedily find the closest point to the query.
+Popular in recent years, mostly based on the idea of proximity graph. Given a query, start from a source point (randomly chosen or learned), greedily find the closest point to the query.
+
+Blog: [Proximity Graph-based Approximate Nearest Neighbor Search](https://zilliz.com/learn/pg-based-anns)
 
 - [HNSW](https://github.com/nmslib/hnswlib) Just skip lists build on proximity graph.
   - Paper: [Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs](https://arxiv.org/ftp/arxiv/papers/1603/1603.09320.pdf)
@@ -36,6 +39,7 @@ Popular in recent years, mostly based on the idea of [Navigable Small World Grap
 
 - [Vamana (DiskANN)](https://github.com/microsoft/DiskANN)
   - Paper: [DiskANN: Fast Accurate Billion-point Nearest Neighbor Search on a Single Node](https://suhasjs.github.io/files/diskann_neurips19.pdf)
+  - Blog: [DiskANN: A Disk-based ANNS Solution with High Recall and High QPS on Billion-scale Dataset](https://zilliz.com/blog/diskann-a-disk-based-anns-solution-with-high-recall-and-high-qps-on-billion-scale-dataset)
 
 - [SPTAG](https://github.com/microsoft/SPTAG)
   - Paper: [Query-driven iterated neighborhood graph search for large scale indexing](https://jingdongwang2017.github.io/Pubs/ACMMM12-GraphSearch.pdf)
