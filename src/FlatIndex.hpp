@@ -5,6 +5,7 @@
 #include <string_view>
 #include <vector>
 
+#include "Config.hpp"
 #include "OnlineIndex.hpp"
 #include "Space.hpp"
 #include "defs.hpp"
@@ -29,7 +30,7 @@ class FlatIndex : public OnlineIndex {
    * @brief Just load vector points.
    *
    */
-  bool build(const std::vector<P>& point) override {
+  bool build(const std::vector<P>& point, const Config& config = {}) override {
     assert((int)point.size() > 0);
     n_ = (int)point.size();
     for (int i = 0; i < n_; ++i) {
@@ -44,7 +45,8 @@ class FlatIndex : public OnlineIndex {
    *        Time Complexity: O(ND + Klog(K))
    *
    */
-  std::vector<int> search(const P& point, int K) override {
+  std::vector<int> search(const P& point, int K,
+                          const Config& config = {}) override {
     assert((int)point.size() == dim_ && K <= (int)points_.size());
     std::vector<std::pair<float, int>> dist;
     dist.reserve(n_);
@@ -66,7 +68,7 @@ class FlatIndex : public OnlineIndex {
    *        Time Complexity: O(D)
    *
    */
-  bool insert(const P& point) {
+  bool insert(const P& point, const Config& config = {}) {
     assert((int)point.size() == dim_);
     n_++;
     points_.push_back(point);
@@ -78,7 +80,7 @@ class FlatIndex : public OnlineIndex {
    *        Time Complexity: O(ND)
    *
    */
-  bool erase(const P& point) {
+  bool erase(const P& point, const Config& config = {}) {
     auto it = std::find(points_.begin(), points_.end(), point);
     if (it == points_.end()) {
       return false;

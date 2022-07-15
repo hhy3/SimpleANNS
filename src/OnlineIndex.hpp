@@ -11,10 +11,12 @@ namespace sanns {
  */
 class OnlineIndex : public Index {
  public:
-  virtual bool build(const std::vector<P>& points) = 0;
-  virtual std::vector<int> search(const P& point, int K) = 0;
-  virtual bool insert(const P& point) = 0;
-  virtual bool erase(const P& point) = 0;
+  virtual bool build(const std::vector<P>& points,
+                     const Config& config = {}) = 0;
+  virtual std::vector<int> search(const P& point, int K,
+                                  const Config& config = {}) = 0;
+  virtual bool insert(const P& point, const Config& config = {}) = 0;
+  virtual bool erase(const P& point, const Config& config = {}) = 0;
 };
 
 }  // namespace sanns
