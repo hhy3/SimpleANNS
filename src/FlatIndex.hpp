@@ -20,9 +20,9 @@ class FlatIndex : public OnlineIndex {
  public:
   FlatIndex(std::string_view space_name, int dim) : dim_(dim) {
     if (space_name == "l2") {
-      distFunc_ = L2Space::getDistFunc();
+      dist_func_ = L2Space::getDistFunc();
     } else if (space_name == "ip") {
-      distFunc_ = InnerProductSpace::getDistFunc();
+      dist_func_ = InnerProductSpace::getDistFunc();
     }
   }
 
@@ -51,7 +51,7 @@ class FlatIndex : public OnlineIndex {
     std::vector<std::pair<float, int>> dist;
     dist.reserve(n_);
     for (int i = 0; i < (int)points_.size(); ++i) {
-      F d = distFunc_(points_[i], point);
+      F d = dist_func_(points_[i], point);
       dist.emplace_back(d, i);
     }
     std::nth_element(dist.begin(), dist.begin() + K - 1, dist.end());
@@ -91,7 +91,7 @@ class FlatIndex : public OnlineIndex {
   }
 
  private:
-  DistFunc distFunc_;
+  DistFunc dist_func_;
   int n_, dim_;
   std::vector<P> points_;
 };

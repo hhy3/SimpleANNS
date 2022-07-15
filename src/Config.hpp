@@ -1,10 +1,10 @@
 #pragma once
 
-#include <string_view>
+#include <string>
 #include <unordered_map>
 
 namespace sanns {
 
-using Config = std::unordered_map<std::string_view, std::string_view>;
+using Config = std::unordered_map<std::string, std::string>;
 
 }  // namespace sanns
