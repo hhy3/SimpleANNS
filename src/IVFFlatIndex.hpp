@@ -22,7 +22,7 @@ class IVFFlatIndex : public Index {
    * @param space_name: Only l2 and ip are supported.
    * @param dim: Vector space dimensionality.
    */
-  IVFFlatIndex(std::string_view space_name, int dim) : dim_(dim) {
+  IVFFlatIndex(std::string_view space_name, int ndim) : ndim_(ndim) {
     if (space_name == "l2") {
       dist_func_ = L2Space::getDistFunc();
     } else if (space_name == "ip") {
@@ -43,7 +43,7 @@ class IVFFlatIndex : public Index {
       max_iter = stoi(config.at("max_iter"));
     }
     points_ = points;
-    n_points_ = points_->size();
+    npoints_ = points_->size();
     KMeans kmeans(dist_func_);
     kmeans.fit(points_, nlist_, max_iter);
     centroids_ = kmeans.centroids();
@@ -64,7 +64,7 @@ class IVFFlatIndex : public Index {
     assert(nprob <= nlist_);
     std::vector<std::pair<float, int>> distc, distp;
     distc.reserve(nlist_);
-    distp.reserve(n_points_);
+    distp.reserve(npoints_);
     for (int i = 0; i < nlist_; ++i) {
       F d = dist_func_(point, centroids_[i]);
       distc.emplace_back(d, i);
@@ -88,7 +88,7 @@ class IVFFlatIndex : public Index {
 
  private:
   DistFunc dist_func_;
-  int n_points_, dim_, nlist_;
+  int npoints_, ndim_, nlist_;
   std::vector<P>* points_;
   std::vector<P> centroids_;
   std::vector<std::vector<int>> components_;

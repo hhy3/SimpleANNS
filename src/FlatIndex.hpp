@@ -24,7 +24,7 @@ class FlatIndex : public OnlineIndex {
    * @param space_name: Only l2 and ip are supported.
    * @param dim: Vector space dimensionality.
    */
-  FlatIndex(std::string_view space_name, int dim) : dim_(dim) {
+  FlatIndex(std::string_view space_name, int ndim) : ndim_(ndim) {
     if (space_name == "l2") {
       dist_func_ = L2Space::getDistFunc();
     } else if (space_name == "ip") {
@@ -39,9 +39,9 @@ class FlatIndex : public OnlineIndex {
    */
   bool build(std::vector<P>* points, const Config& config = {}) override {
     assert((int)points->size() > 0);
-    n_points_ = (int)points->size();
-    for (int i = 0; i < n_points_; ++i) {
-      assert((int)points->at(i).size() == dim_);
+    npoints_ = (int)points->size();
+    for (int i = 0; i < npoints_; ++i) {
+      assert((int)points->at(i).size() == ndim_);
     }
     points_ = points;
     return true;
@@ -54,10 +54,10 @@ class FlatIndex : public OnlineIndex {
    */
   std::vector<int> search(const P& point, int K,
                           const Config& config = {}) override {
-    assert((int)point.size() == dim_ && K <= (int)points_->size());
+    assert((int)point.size() == ndim_ && K <= (int)points_->size());
     std::vector<std::pair<float, int>> dist;
-    dist.reserve(n_points_);
-    for (int i = 0; i < n_points_; ++i) {
+    dist.reserve(npoints_);
+    for (int i = 0; i < npoints_; ++i) {
       F d = dist_func_(points_->at(i), point);
       dist.emplace_back(d, i);
     }
@@ -76,8 +76,8 @@ class FlatIndex : public OnlineIndex {
    *
    */
   bool insert(const P& point, const Config& config = {}) {
-    assert((int)point.size() == dim_);
-    n_points_++;
+    assert((int)point.size() == ndim_);
+    npoints_++;
     points_->push_back(point);
     return true;
   }
@@ -99,7 +99,7 @@ class FlatIndex : public OnlineIndex {
 
  private:
   DistFunc dist_func_;
-  int n_points_, dim_;
+  int npoints_, ndim_;
   std::vector<P>* points_;
 };
 
