@@ -31,6 +31,10 @@ Popular in recent years, mostly based on the idea of proximity graph. Given a qu
 
 Blog: [Proximity Graph-based Approximate Nearest Neighbor Search](https://zilliz.com/learn/pg-based-anns)
 
+- NSW
+  - Paper: [Approximate nearest neighbor algorithm based on navigable
+small world graphs](https://publications.hse.ru/pubs/share/folder/x5p6h7thif/128296059.pdf)
+
 - [HNSW](https://github.com/nmslib/hnswlib) Just skip lists build on proximity graph.
   - Paper: [Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs](https://arxiv.org/ftp/arxiv/papers/1603/1603.09320.pdf)
 
