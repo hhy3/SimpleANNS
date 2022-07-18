@@ -54,7 +54,7 @@ class FlatIndex : public OnlineIndex {
    */
   std::vector<int> search(const P& point, int K,
                           const Config& config = {}) override {
-    assert((int)point.size() == ndim_ && K <= (int)points_->size());
+    assert((int)point.size() == ndim_ && K <= npoints_);
     std::vector<std::pair<float, int>> dist;
     dist.reserve(npoints_);
     for (int i = 0; i < npoints_; ++i) {

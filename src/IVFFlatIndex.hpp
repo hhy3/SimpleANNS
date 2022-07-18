@@ -59,6 +59,7 @@ class IVFFlatIndex : public Index {
    */
   std::vector<int> search(const P& point, int K,
                           const Config& config) override {
+    assert(point.size() == ndim_ && K <= npoints_);
     assert(config.count("nprob"));
     int nprob = std::stoi(config.at("nprob"));
     assert(nprob <= nlist_);
@@ -71,8 +72,11 @@ class IVFFlatIndex : public Index {
     }
     std::nth_element(distc.begin(), distc.begin() + nprob - 1, distc.end());
     std::sort(distc.begin(), distc.begin() + nprob);
-    for (int i = 0; i < nprob; ++i) {
-      for (auto& idx : components_[distc[i].second]) {
+    int64_t cnt = 0;
+    for (int i = 0; i < nprob || cnt < K; ++i) {
+      auto component = components_[distc[i].second];
+      cnt += (int)component.size();
+      for (auto& idx : component) {
         F d = dist_func_(point, points_->at(idx));
         distp.emplace_back(d, idx);
       }
