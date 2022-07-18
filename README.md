@@ -1,6 +1,6 @@
 # SimpleANNS
 
-Naive implementations of some ANNS (Approximate Nearest Neighbor Search) algorithms without any optimization and generalization.
+Naive implementations of some ANN (Approximate Nearest Neighbor) search algorithms without any optimization and generalization.
 
 ## Progess 
 - [x] [FLAT](https://github.com/hhy3/SimpleANNS/blob/master/src/FlatIndex.hpp)
@@ -16,9 +16,11 @@ Naive implementations of some ANNS (Approximate Nearest Neighbor Search) algorit
 
 The algorithms used in ANN search can generally be classified as **tree based**, **LHS based**, **graph based** and **IVF based**, where graph and IVF based algorithms are more popular today but tree and LHS based algorithms are no longer commonly used. Moreover, **quantization** can be used to compress data and reduce memory usage.
 
+**[CVPR20 Tutorial] Billion-scale Approximate Nearest Neighbor Search](https://www.youtube.com/watch?v=SKrHs03i08Q)** is a good tutorial for ANN beginners.
+
 **[ann-benchmarks](https://github.com/erikbern/ann-benchmarks/)** contains some tools to benchmark various implementations of approximate nearest neighbor (ANN) search for different metrics.
 ### Tree Based
-Based on the idea of partitioning vector space, performs poorly due to the curse of dimensionality.
+Based on the idea of partitioning vector space, performs poorly in high demensional vector space due to the curse of dimensionality.
 
 - **[FLANN](https://github.com/flann-lib/flann)** automatically select "Randomized KD Tree" or "k-means Tree"
   - paper: [AST APPROXIMATE NEAREST NEIGHBORS WITH AUTOMATIC ALGORITHM CONFIGURATION](https://lear.inrialpes.fr/~douze/enseignement/2014-2015/presentation_papers/muja_flann.pdf) 
@@ -28,27 +30,28 @@ Based on the idea of partitioning vector space, performs poorly due to the curse
   - Blog: [Nearest neighbors and vector models – part 2 – algorithms and data structures](https://erikbern.com/2015/10/01/nearest-neighbors-and-vector-models-part-2-how-to-search-in-high-dimensional-spaces.html)
 
 ### LHS (Locality Sensitive Hashing) Based
-Popular in theory area, but performs poorly in practice with real-world data.
+Instead of collision avoidance, the general idea of hashing, the idea of LSH is to expolit collisions for mapping points which are nearby into the same bucket.
+It is popular in theory area, but performs poorly in practice with real-world data.
 
 - **[FALCONN](https://github.com/FALCONN-LIB/FALCONN)**
 
 
 ### Graph Based
 
-Popular in recent years, mostly based on the idea of proximity graph. Given a query, start from a source point (randomly chosen or learned), greedily find the closest point to the query.
+Popular in recent years, mostly based on the idea of proximity graph. Given a query, start from a source point (randomly chosen or supplied by a separate algorithm), greedily find the closest point to the query.
 
 Blog: [Proximity Graph-based Approximate Nearest Neighbor Search](https://zilliz.com/learn/pg-based-anns)
 
 - **NSW** has small world nagigation properties which has **polylog** time complexity of insertion and seraching.
   - Paper: [Approximate nearest neighbor algorithm based on navigable small world graphs](https://publications.hse.ru/pubs/share/folder/x5p6h7thif/128296059.pdf)
 
-- **[HNSW](https://github.com/nmslib/hnswlib)** Just skip lists build on proximity graph.
+- **[HNSW](https://github.com/nmslib/hnswlib)** incrementally builds a multi-layer structure consisting from hierarchical set of proximity graphs (layers) for nested subsets of the stored elements, can be seen as an extension of the probabilistic skip list structure with proximity graphs instead of the linked lists
   - Paper: [Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs](https://arxiv.org/ftp/arxiv/papers/1603/1603.09320.pdf)
 
 - **[NSG](https://github.com/ZJULearning/nsg)**
   - Paper: [Fast Approximate Nearest Neighbor Search With The Navigating Spreading-out Graph](https://arxiv.org/pdf/1707.00143.pdf)
 
-- **[Vamana (DiskANN)](https://github.com/microsoft/DiskANN)** makes optimization for disk IO.
+- **[Vamana (DiskANN)](https://github.com/microsoft/DiskANN)** optimizes for disk IO, and makes previous NSG method SSD-friendly.
   - Paper: [DiskANN: Fast Accurate Billion-point Nearest Neighbor Search on a Single Node](https://suhasjs.github.io/files/diskann_neurips19.pdf)
   - Blog: [DiskANN: A Disk-based ANNS Solution with High Recall and High QPS on Billion-scale Dataset](https://zilliz.com/blog/diskann-a-disk-based-anns-solution-with-high-recall-and-high-qps-on-billion-scale-dataset)
 
