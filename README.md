@@ -25,7 +25,7 @@ Based on the idea of partitioning vector space, performs poorly in high demensio
 - **[FLANN](https://github.com/flann-lib/flann)**
   - automatically select "Randomized KD Tree" or "k-means Tree"
   - take any given dataset and desired degree of precision and use these to automatically determine the best algorithm and parameter values.
-  - paper: [FAST APPROXIMATE NEAREST NEIGHBORS WITH AUTOMATIC ALGORITHM CONFIGURATION](https://lear.inrialpes.fr/~douze/enseignement/2014-2015/presentation_papers/muja_flann.pdf) 
+  - *Paper*: [FAST APPROXIMATE NEAREST NEIGHBORS WITH AUTOMATIC ALGORITHM CONFIGURATION](https://lear.inrialpes.fr/~douze/enseignement/2014-2015/presentation_papers/muja_flann.pdf) 
 
 - **[Annoy](https://github.com/spotify/annoy)**
   - is based on random projection forest, uses multi-tree with a shared priority queue
@@ -44,6 +44,10 @@ Popular in recent years, mostly based on the idea of proximity graph. Given a qu
 
 *Blog*: [Proximity Graph-based Approximate Nearest Neighbor Search](https://zilliz.com/learn/pg-based-anns)
 
+- **Delaunay Triangulations** , which are proximity graphs, are defined as the dual graph of the Voronoi diagram, and many graph based algorithms (like kNN graphs and NSW graphs) are approximation of DT.
+  - *Blog*: [[Tutorial] Voronoi Diagram and Delaunay Triangulation in O(n log n) with Fortune's Algorithm](https://codeforces.com/blog/entry/85638)
+  - *Blog*: [Delaunay triangulation and Voronoi diagram](https://cp-algorithms.com/geometry/delaunay.html)
+
 - **NSW**
   - has small world nagigation properties which has **polylog** time complexity of insertion and seraching.
   - *Paper*: [Approximate nearest neighbor algorithm based on navigable small world graphs](https://publications.hse.ru/pubs/share/folder/x5p6h7thif/128296059.pdf)
@@ -53,8 +57,14 @@ Popular in recent years, mostly based on the idea of proximity graph. Given a qu
   - can be seen as an extension of the probabilistic skip list structure with proximity graphs instead of the linked lists
   - *Paper*: [Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs](https://arxiv.org/ftp/arxiv/papers/1603/1603.09320.pdf)
 
+- **[EFANNA](https://github.com/ZJULearning/efanna)**
+  - *Paper*: [EFANNA : An Extremely Fast Approximate Nearest Neighbor Search Algorithm Based on kNN Graph](https://arxiv.org/pdf/1609.07228.pdf)
+
 - **[NSG](https://github.com/ZJULearning/nsg)**
   - *Paper*: [Fast Approximate Nearest Neighbor Search With The Navigating Spreading-out Graph](https://arxiv.org/pdf/1707.00143.pdf)
+
+- **[SSG](https://github.com/ZJULearning/SSG)**
+  - *Paper*: [High Dimensional Similarity Search with Satellite System Graph: Efficiency, Scalability, and Unindexed Query Compatibility](https://arxiv.org/pdf/1907.06146.pdf)
 
 - **[Vamana (DiskANN)](https://github.com/microsoft/DiskANN)**
   - optimizes for disk IO, and makes previous NSG method SSD-friendly.
@@ -77,9 +87,10 @@ This algorithm clusters the dataset to partition the space to [Voronoi Cells](ht
 
 ### Quantization
 - **[PQ](https://github.com/matsui528/nanopq/blob/main/nanopq/pq.py)**
-  - Split a vector into subspaces, and quantize each sub-vector.
+  - The essence of PQ is to decompose the high-dimensional vector space into the Cartesian product of subspaces and then quantize these subspaces separately
   - [Faiss](https://github.com/facebookresearch/faiss)
     - is based on PQ + IVF.
+  - *Tutorial*: https://rutgers-db.github.io/cs541-fall19/slides/notes5.pdf
   - *Paper*: [Product Quantization for Nearest Neighbor Search](https://hal.inria.fr/inria-00514462v2/document)
   - *Survey*: [A Survey of Product Quantization](https://www.jstage.jst.go.jp/article/mta/6/1/6_2/_pdf)
 
